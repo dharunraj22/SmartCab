@@ -1,0 +1,129 @@
+SMARTCAB – PROBLEM STATEMENT (INITIAL DRAFT)
+============================================
+
+1. OVERVIEW
+-----------
+SmartCab is a simplified cab booking and management system that simulates the core functionalities 
+of real-world ride-hailing platforms like Uber or Ola using pure Java.
+
+The project models how customers, drivers, and cabs interact within a booking workflow — 
+from booking requests to trip completion — while demonstrating 
+object-oriented principles, concurrency, exception handling, and service abstraction.
+
+SmartCab is a console-based simulation designed to showcase professional software design 
+and Java fundamentals (OOP, multithreading, collections, exceptions, interfaces).
+
+------------------------------------------------------------
+
+2. OBJECTIVE
+------------
+Develop a modular Java application that can:
+
+- Register and manage drivers, customers, and cabs
+- Handle ride booking requests and assign the nearest available cab
+- Process multiple concurrent ride requests using multithreading
+- Calculate fares and deduct wallet balance upon ride completion
+- Notify users of booking updates
+- Handle business exceptions (no cabs, failed payments)
+- Demonstrate Encapsulation, Inheritance, Polymorphism, Interfaces, Exception Handling, and Thread Safety
+
+------------------------------------------------------------
+
+3. KEY FUNCTIONAL REQUIREMENTS
+------------------------------
+- Maintain customer and driver details (ID, name, contact)
+- Manage cabs (cab number, driver, location)
+- Book rides using source and destination coordinates
+- Automatically find and allocate the nearest available cab
+- Support multiple concurrent ride requests (threads)
+- Simulate rides using separate threads (ride progress)
+- Calculate fare based on distance
+- Deduct fare from customer's wallet
+- Notify users when rides are booked, started, or completed
+- Throw exceptions for unavailable cabs or payment errors
+
+------------------------------------------------------------
+
+4. NON-FUNCTIONAL REQUIREMENTS
+------------------------------
+- Handle at least 5–10 concurrent requests safely
+- Design should be scalable and modular
+- System must compile and run cleanly on Java 17+ via Maven
+- Should include automated tests using JUnit
+- Console-based logging should clearly indicate system flow
+
+------------------------------------------------------------
+
+5. JAVA CONCEPTS TO BE APPLIED
+------------------------------
+- Encapsulation (private data, getters/setters)
+- Inheritance (User → Customer, Driver)
+- Polymorphism (Interfaces and implementations)
+- Interfaces (RideService, PaymentService, NotificationService)
+- Collections (List, Map for managing cabs, rides)
+- Exception Handling (custom checked exceptions)
+- Multithreading (simulated parallel bookings)
+- Synchronization (avoid double booking)
+- Optional Design Patterns (Strategy for fare, Singleton for system registry)
+
+------------------------------------------------------------
+
+6. SYSTEM FLOW SUMMARY
+----------------------
+1. System initializes with predefined drivers, customers, and cabs.
+2. Customers send ride requests (each in a separate thread).
+3. RideServiceImpl finds and assigns the nearest available cab.
+4. Cab is marked “busy”.
+5. RideTask thread simulates the ride progress (Thread.sleep()).
+6. On completion:
+   - PaymentService deducts fare
+   - NotificationService alerts users
+   - Cab is marked “available” again
+7. If all cabs are busy → NoCabAvailableException is thrown.
+
+------------------------------------------------------------
+
+7. SAMPLE CONSOLE OUTPUT
+------------------------
+[Thread-1] Customer A requests a ride to (12.9, 77.6)
+[Thread-1] Assigned Cab: KA09AB1234 (Driver: B)
+[Thread-2] Customer C requests a ride to (13.0, 77.5)
+[Thread-2] NoCabAvailableException: All cabs currently busy.
+[Thread-1] Ride completed for A. Fare: ₹245. Payment processed.
+
+------------------------------------------------------------
+
+8. DELIVERABLES
+---------------
+- Java source code (src/main/java/com.smartcab)
+- pom.xml with build and dependencies
+- Class diagram (PlantUML or draw.io)
+- ProblemStatement.txt and README.md
+- Unit tests (JUnit)
+- Runnable JAR in /target directory
+
+------------------------------------------------------------
+
+9. STRETCH GOALS (Optional)
+----------------------------
+- Add surge pricing via FareStrategy interface
+- Add admin dashboard (total rides, revenue)
+- Persist ride history in file or JSON
+- Add proper logging via Log4j or SLF4J
+
+------------------------------------------------------------
+
+10. SUCCESS CRITERIA
+--------------------
+Project is considered successful when:
+- All OOP concepts are demonstrated correctly
+- Multiple concurrent bookings execute without conflicts
+- Application runs cleanly with Maven commands
+- Documentation (README + problem statement) is consistent
+- System output clearly represents the full ride lifecycle
+
+------------------------------------------------------------
+Author: Dharunraj R
+Date: 09 Nov
+Language: Java 23
+Build Tool: Maven
