@@ -1,9 +1,9 @@
 package com.smartcab.model;
 
 public class Cab {
-    private String cabNo;
-    private String cabModel;
-    private boolean isAvailable;
+    private final String cabNo;
+    private final String cabModel;
+    private boolean available;
 
     public String getCabNo() {
         return cabNo;
@@ -16,15 +16,15 @@ public class Cab {
     public Cab(String cabNo, String cabModel) {
         this.cabNo = cabNo;
         this.cabModel = cabModel;
-        this.isAvailable = true; // Cabs are available by default
+        this.available = true; // Cabs are available by default
     }
 
     public boolean isAvailable() {
-        return isAvailable;
+        return available;
     }
 
     public void setAvailable(boolean available) {
-        isAvailable = available;
+        this.available = available;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class Cab {
         return "Cab{" +
                 "cabNo='" + cabNo + '\'' +
                 ", cabModel='" + cabModel + '\'' +
-                ", isAvailable=" + isAvailable +
+                ", isAvailable=" + available +
                 '}';
     }
 }
