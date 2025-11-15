@@ -48,11 +48,11 @@ public class DriverTest {
     void testToString() {
         Cab cab = new Cab("CAB004", "Toyota Etios");
         Location loc = new Location(11.0, 22.0);
-        Driver driver = new Driver("D004", "Suresh", cab, "LIC9999", 4.2, "9999999999", DriverStatus.AVAILABLE, loc);
+        Driver driver = new Driver("D004", "Suresh", cab, "LIC9999", 4.2, "9999999999", DriverStatus.BUSY, loc);
 
         String str = driver.toString();
         assertTrue(str.contains("driverId='D004'"));
-        assertTrue(str.contains("status=INACTIVE"));
+        assertTrue(str.contains("status=BUSY"));
         assertTrue(str.contains("Toyota Etios"));
         assertTrue(str.contains("Location"));
     }
