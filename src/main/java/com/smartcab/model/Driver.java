@@ -50,6 +50,10 @@ public class Driver {
         }
     }
 
+    public String getDriverId() {
+        return driverId;
+    }
+
     @Override
     public String toString() {
         return "Driver{" +
