@@ -7,6 +7,7 @@ public class Ride {
     private final Location pickupLocation;
     private final Location dropoffLocation;
     private double fare;
+    private double estimatedTime;
     private RideStatus status;
 
     public Ride(String rideId, Customer customer, Cab cab, Location pickupLocation, Location dropoffLocation) {
@@ -17,6 +18,7 @@ public class Ride {
         this.dropoffLocation = dropoffLocation;
         this.status = RideStatus.REQUESTED;
         calculateFare(5.0);
+        calculateTime();
     }
 
     public String getRideId() {
@@ -62,6 +64,11 @@ public class Ride {
     public void calculateFare(double ratePerKm) {
         double distance = getDistance();
         this.fare = Math.min(distance * ratePerKm, 50.0); // Cap fare at 50.0
+    }
+
+    public void calculateTime() {
+        double distance = getDistance();
+        estimatedTime =  distance / 40 * 60; // Assuming average speed of 40 km/h, return time in minutes
     }
 
     public String toString() {
