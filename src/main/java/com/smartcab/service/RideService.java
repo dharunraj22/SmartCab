@@ -20,7 +20,7 @@ public class RideService {
         this.driverService = driverService;
     }
 
-    Ride requestRide(Customer customer, Location pickup, Location drop) {
+    public Ride requestRide(Customer customer, Location pickup, Location drop) {
         if( customer == null || pickup == null || drop == null) {
             throw new IllegalArgumentException("Customer and locations must be provided");
         }
@@ -39,7 +39,12 @@ public class RideService {
         if(customer.getWalletBalance() < fare) {
             throw new IllegalStateException("Insufficient balance in customer's wallet");
         }
-        driverService.markDriverBusy(driver.getDriverId());
+
+        boolean available = driverService.markDriverBusy(driver.getDriverId());
+        if(!available) {
+            throw new IllegalStateException("Driver is no longer unavailable");
+        }
+
         rides.put(ride.getRideId(), ride);
         return ride;
     }

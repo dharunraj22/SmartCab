@@ -19,6 +19,10 @@ public class Location {
         this.longitude = newLongitude;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return this.latitude == obj.latitude && this.longitude == obj.longitude;
+    }
 
     public double calculateDistance(Location other) {
         double latDiff = this.latitude - other.latitude;

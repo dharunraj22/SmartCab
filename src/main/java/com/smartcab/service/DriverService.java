@@ -5,10 +5,11 @@ import com.smartcab.model.DriverStatus;
 import com.smartcab.model.Location;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DriverService {
 
-    private Map<String, Driver> drivers = new HashMap<>();
+    private Map<String, Driver> drivers = new ConcurrentHashMap<>();
 
     public void registerDriver(Driver driver) {
         if (driver == null) {
@@ -24,7 +25,7 @@ public class DriverService {
         return drivers.get(driverId);
     }
 
-    public void updateDriverStatus(String driverId, DriverStatus status) {
+    private void updateDriverStatus(String driverId, DriverStatus status) {
         Driver driver = drivers.get(driverId);
         if (driver != null) {
             driver.setStatus(status);
@@ -70,12 +71,31 @@ public class DriverService {
         return nearestDriver;
     }
 
-    public void markDriverBusy(String driverId) {
-        updateDriverStatus(driverId, DriverStatus.BUSY);
+    public boolean markDriverBusy(String driverId) {
+        Driver driver = drivers.get(driverId);
+        if (driver == null) return false;
+
+        synchronized (driver) {
+            if (driver.getStatus() != DriverStatus.AVAILABLE) {
+                return false; // someone else took the driver
+            }
+
+            updateDriverStatus(driverId, DriverStatus.BUSY);
+            return true; // successfully assigned
+        }
     }
 
-    public void markDriverFree(String driverId) {
-        updateDriverStatus(driverId, DriverStatus.AVAILABLE);
+    public boolean markDriverFree(String driverId) {
+        Driver driver = drivers.get(driverId);
+        if(driver == null) return false;
+
+        synchronized (driver) {
+            if(driver.getStatus() != DriverStatus.BUSY) {
+                return false;
+            }
+            updateDriverStatus(driverId, DriverStatus.AVAILABLE);
+            return true; 
+        }
     }
 
     public List<Driver> getAllDrivers() {
