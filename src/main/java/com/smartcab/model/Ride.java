@@ -21,6 +21,11 @@ public class Ride {
         calculateTime();
     }
 
+    public static double estimateFare(Location pickup, Location drop, double ratePerKm) {
+        double distance = pickup.calculateDistance(drop);
+        return Math.min(distance * ratePerKm, 50.0); // Cap fare at 50.0
+    }
+
     public String getRideId() {
         return rideId;
     }

@@ -1,5 +1,7 @@
 package com.smartcab.model;
 
+import java.util.Objects;
+
 public class Location {
 
     private double latitude;
@@ -21,7 +23,16 @@ public class Location {
 
     @Override
     public boolean equals(Object obj) {
-        return this.latitude == obj.latitude && this.longitude == obj.longitude;
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Location other = (Location) obj;
+        return Double.compare(latitude, other.latitude) == 0 &&
+            Double.compare(longitude, other.longitude) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(latitude, longitude);
     }
 
     public double calculateDistance(Location other) {

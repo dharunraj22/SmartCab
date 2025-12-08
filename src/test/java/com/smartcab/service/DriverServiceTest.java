@@ -39,7 +39,7 @@ class DriverServiceTest {
         Driver driver = new Driver("D002", "Mark", new Cab("C5", "Tesla"), "LIC005", 4.8, "66666", DriverStatus.AVAILABLE, new Location(2, 2));
 
         service.registerDriver(driver);
-        service.updateDriverStatus("D002", DriverStatus.BUSY);
+        service.markDriverBusy("D002");
 
         assertEquals(DriverStatus.BUSY, driver.getStatus());
     }
