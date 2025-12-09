@@ -90,4 +90,61 @@ public class RideService {
         }
     }
 
+    public boolean completeRide(String rideId) {
+        Ride ride = rides.get(rideId);
+        if(ride == null) {
+            throw new IllegalArgumentException("Provided rideId not found: " + rideId);
+        }
+        synchronized (ride) {
+            if(ride.getStatus() != RideStatus.ONGOING) {
+                return false;
+            }
+            try {
+            ride.completeRide();
+            } catch (Exception e) {
+                System.err.println("Failed to complete ride (payment or state): " + e.getMessage());
+                throw new IllegalStateException("Failed to complete ride due to payment/state issue.", e);
+            }
+
+            try {
+                driverService.markDriverFree(ride.getDriver().getDriverId());
+            } catch (Exception e) {
+                System.err.println("Warning: failed to free driver " + ride.getDriver().getDriverId()
+                    + " after completing ride " + rideId + ": " + e.getMessage());
+            }
+
+            System.out.println("Ride " + rideId + " completed.");
+            return true;
+        }
+    }
+
+    public boolean cancelRide(String rideId) {
+        Ride ride = rides.get(rideId);
+        if(ride == null) {
+            throw new IllegalArgumentException("Ride not found: " + rideId);    
+        }
+        synchronized (ride) {
+            try {
+                driverService.markDriverFree(ride.getDriver().getDriverId());
+                ride.setStatus(RideStatus.CANCELLED);
+                System.out.println("Ride " + rideId + " cancelled.");
+                return true;
+            } catch (Exception e) {
+                System.err.println("Failed to cancel ride " + rideId + ": " + e.getMessage());
+                return false;
+            }
+        }
+        
+    }
+
+    public Ride getRide(String RideId) {
+        return rides.get(RideId);
+    }
+
+    public void listRides() {
+        for(Ride ride : rides.values()) {
+            System.out.println(ride);
+        }
+    }
+
 }
