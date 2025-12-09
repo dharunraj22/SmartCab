@@ -3,6 +3,7 @@ package com.smartcab.model;
 public class Ride {
     private final String rideId;
     private final Customer customer;
+    private final Driver driver;
     private final Cab cab;
     private final Location pickupLocation;
     private final Location dropoffLocation;
@@ -10,9 +11,10 @@ public class Ride {
     private double estimatedTime;
     private RideStatus status;
 
-    public Ride(String rideId, Customer customer, Cab cab, Location pickupLocation, Location dropoffLocation) {
+    public Ride(String rideId, Customer customer, Driver driver, Cab cab, Location pickupLocation, Location dropoffLocation) {
         this.rideId = rideId;
         this.customer = customer;
+        this.driver = driver;
         this.cab = cab;
         this.pickupLocation = pickupLocation;
         this.dropoffLocation = dropoffLocation;
@@ -34,6 +36,10 @@ public class Ride {
         return customer;
     }
 
+    public Driver getDriver() {
+        return driver;
+    }
+
     public Cab getCab() {
         return cab;
     }
@@ -41,6 +47,14 @@ public class Ride {
     public double getDistance() {
         double distance = pickupLocation.calculateDistance(dropoffLocation);
         return distance;
+    }
+
+    public double getEstimatedTime() {
+        return estimatedTime;
+    }
+
+    public void setStatus(RideStatus status) {
+        this.status = status;
     }
 
     public void startRide() {
@@ -80,6 +94,7 @@ public class Ride {
         return "Ride{" +
                 "rideId='" + rideId + '\'' +
                 ", customer=" + customer +
+                ", driver=" + driver +
                 ", cab=" + cab +
                 ", pickupLocation=" + pickupLocation +
                 ", dropoffLocation=" + dropoffLocation +

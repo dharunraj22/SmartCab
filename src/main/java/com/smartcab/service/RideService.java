@@ -10,6 +10,8 @@ import java.util.List;
 import com.smartcab.model.Customer;
 import com.smartcab.model.Location;
 import com.smartcab.model.Driver;
+import com.smartcab.model.RideStatus;
+import com.smartcab.model.DriverStatus;
 
 
 public class RideService {
@@ -48,7 +50,7 @@ public class RideService {
                 assigned = driverService.markDriverBusy(d.getDriverId());
                 if (assigned) {
                     String rideId = UUID.randomUUID().toString();
-                    ride = new Ride(rideId, customer, d.getCab(), pickup, drop);
+                    ride = new Ride(rideId, customer, d, d.getCab(), pickup, drop);
                     rides.put(ride.getRideId(), ride);
                     return ride;
                 }
@@ -64,6 +66,28 @@ public class RideService {
             }
         }
         throw new IllegalStateException("Failed to assign any available driver");
+    }
+
+    public boolean startRide(String rideId) {
+        Ride ride = rides.get(rideId);
+        if(ride == null) {
+            throw new IllegalArgumentException("Ride not found: " + rideId);
+        }
+        synchronized (ride) {
+            if(ride.getStatus() != RideStatus.REQUESTED) {
+                return false;
+            }
+
+            if(ride.getDriver() == null) {
+                Driver driver = ride.getDriver();
+                if(driver.getStatus() != DriverStatus.BUSY) {
+                    System.err.println("Driver not marked busy for ride: " + rideId);
+                }
+            }
+            ride.startRide();
+            System.out.println("Ride " + rideId + " started.");
+            return true;
+        }
     }
 
 }

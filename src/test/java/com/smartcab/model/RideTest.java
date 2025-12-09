@@ -12,9 +12,10 @@ public class RideTest {
         Location drop = new Location(3.0, 4.0);
 
         Customer customer = new Customer("C100", "Test", "9999999999", 100.0, pickup);
+        Driver driver = new Driver("D100", "DriverTest", new Cab("CAB100", "TestModel"), "LIC100", 4.5, "1234567890", DriverStatus.AVAILABLE, new Location(1.0, 1.0));
         Cab cab = new Cab("CAB100", "TestModel");
 
-        Ride ride = new Ride("R100", customer, cab, pickup, drop);
+        Ride ride = new Ride("R100", customer, driver, cab, pickup, drop);
 
         assertEquals(5.0, ride.getDistance(), 0.0001);
         // constructor uses ratePerKm = 5.0 => fare = 5 * 5 = 25 (and capped at 50, so 25)
@@ -28,8 +29,9 @@ public class RideTest {
         Location drop = new Location(3.0, 4.0); // distance 5
         Customer customer = new Customer("C101", "Pay", "8888888888", 100.0, pickup);
         Cab cab = new Cab("CAB101", "ModelX");
+        Driver driver = new Driver("D100", "DriverX", cab, "LIC100", 4.5, "1234567890", DriverStatus.AVAILABLE, new Location(1.0, 1.0));
 
-        Ride ride = new Ride("R101", customer, cab, pickup, drop);
+        Ride ride = new Ride("R101", customer, driver, cab, pickup, drop);
 
         // start
         ride.startRide();
@@ -49,9 +51,10 @@ public class RideTest {
         Location pickup = new Location(0.0, 0.0);
         Location drop = new Location(3.0, 4.0);
         Customer customer = new Customer("C102", "State", "7777777777", 100.0, pickup);
+        Driver driver = new Driver("D101", "DriverY", new Cab("CAB102", "ModelY"), "LIC101", 4.0, "0987654321", DriverStatus.AVAILABLE, new Location(2.0, 2.0));
         Cab cab = new Cab("CAB102", "ModelY");
 
-        Ride ride = new Ride("R102", customer, cab, pickup, drop);
+        Ride ride = new Ride("R102", customer, driver, cab, pickup, drop);
 
         // cannot complete before start
         assertThrows(IllegalStateException.class, ride::completeRide);
@@ -69,9 +72,10 @@ public class RideTest {
         Location drop = new Location(11.0, 0.0);
 
         Customer customer = new Customer("C103", "CapTest", "6666666666", 200.0, pickup);
+        Driver driver = new Driver("D102", "DriverZ", new Cab("CAB103", "ModelZ"), "LIC102", 4.8, "1122334455", DriverStatus.AVAILABLE, new Location(5.0, 5.0));
         Cab cab = new Cab("CAB103", "ModelZ");
 
-        Ride ride = new Ride("R103", customer, cab, pickup, drop);
+        Ride ride = new Ride("R103", customer, driver, cab, pickup, drop);
 
         assertTrue(ride.getDistance() > 10.9 && ride.getDistance() < 11.1);
         assertEquals(50.0, ride.getFare(), 0.001, "Fare should be capped at 50.0");
