@@ -119,23 +119,43 @@ public class RideService {
     }
 
     public boolean cancelRide(String rideId) {
+        if (rideId == null) throw new IllegalArgumentException("rideId cannot be null");
+
         Ride ride = rides.get(rideId);
-        if(ride == null) {
-            throw new IllegalArgumentException("Ride not found: " + rideId);    
+        if (ride == null) {
+            throw new IllegalArgumentException("Ride not found: " + rideId);
         }
+
+        String driverIdToFree = null;
         synchronized (ride) {
-            try {
-                driverService.markDriverFree(ride.getDriver().getDriverId());
-                ride.setStatus(RideStatus.CANCELLED);
-                System.out.println("Ride " + rideId + " cancelled.");
-                return true;
-            } catch (Exception e) {
-                System.err.println("Failed to cancel ride " + rideId + ": " + e.getMessage());
+            if (ride.getStatus() != RideStatus.REQUESTED) {
+                System.err.println("Only requested rides can be cancelled: " + rideId);
                 return false;
             }
+
+            ride.setStatus(RideStatus.CANCELLED);
+            if (ride.getDriver() != null) {
+                driverIdToFree = ride.getDriver().getDriverId();
+            }
+            rides.put(rideId, ride);
+
+            System.out.println("Ride " + rideId + " marked CANCELLED (driver captured: " + driverIdToFree + ")");
         }
-        
-    }
+
+        if (driverIdToFree != null) {
+            try {
+                boolean freed = driverService.markDriverFree(driverIdToFree);
+                if (!freed) {
+                    System.err.println("Warning: driver " + driverIdToFree + " was not freed (status mismatch)");
+                }
+            } catch (Exception e) {
+                System.err.println("Failed to free driver " + driverIdToFree + " while cancelling ride " + rideId + ": " + e.getMessage());
+            }
+        }
+        System.out.println("Ride " + rideId + " cancelled.");
+        return true;
+}
+
 
     public Ride getRide(String RideId) {
         return rides.get(RideId);
