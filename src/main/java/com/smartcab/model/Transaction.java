@@ -10,6 +10,18 @@ public class Transaction {
     final Instant timestamp;
 
     public Transaction(String transactionId, String customerId, TransactionType type, double amount, Instant timestamp) {
+        if(transactionId == null || transactionId.isEmpty()) {
+            throw new IllegalArgumentException("Transaction ID cannot be null or empty");
+        }
+
+        if(customerId == null || customerId.isEmpty()) {
+            throw new IllegalArgumentException("Customer ID cannot be null or empty");
+        }
+
+        if(amount <= 0) {
+            throw new IllegalArgumentException("Amount cannot be negative");
+        }   
+
         this.transactionId = transactionId;
         this.customerId = customerId;
         this.type = type;
